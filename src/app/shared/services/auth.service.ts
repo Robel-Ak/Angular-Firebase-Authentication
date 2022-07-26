@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { Router } from '@angular/router';
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-
-  constructor(public afAuth: AngularFireAuth) { }
+  isLoggedIn = false;
+  constructor(public afAuth: AngularFireAuth,public router: Router) { }
   SignUp(email, password) {
     return this.afAuth
       .createUserWithEmailAndPassword(email, password)
@@ -24,10 +25,28 @@ export class AuthService {
       .then((result) => {
         
         window.alert('You have successfully Logged in!');
+        this.isLoggedIn = true;
         console.log(result);
+        
+      this.router.navigate(['dashboard']);
       })
       .catch((error) => {
         window.alert(error.message);
       });
+  }
+  SignOut() {
+    return this.afAuth.signOut().then((result) => {
+        
+      window.alert('You have successfully Logged out!');
+      this.isLoggedIn = false;
+      console.log(result);
+      
+    })
+    .catch((error) => {
+      window.alert(error.message);
+    });
+  }
+  isAuthenticated(){
+    return this.isLoggedIn;
   }
 }

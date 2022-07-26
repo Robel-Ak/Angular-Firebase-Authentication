@@ -12,4 +12,9 @@
           authenticationService.SignIn(userEmail.value, userPassword.value)
         " />
     </div>
+    <div class="formGroup">
+        <input type="button" class="btn btnPrimary" value="Sign Out" (click)="
+          authenticationService.SignOut()
+        " />
+    </div>
 </div>
