@@ -13,7 +13,8 @@ export class AuthGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
       let isLoggedIn = this.authenticationService.isAuthenticated();
-    if (isLoggedIn){
+
+    if (isLoggedIn && this.authenticationService.isUser){
       return true;
     } else {
       window.alert("Failed to signin and try again!!")
