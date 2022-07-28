@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 export class AuthService {
   isLoggedIn = false;
   isUser = false; 
+  role;
   constructor(public afAuth: AngularFireAuth,public router: Router,private afs:AngularFirestore) { }
   SignUp(email, password) {
     return this.afAuth
@@ -39,13 +40,21 @@ export class AuthService {
         this.afs.collection('users').snapshotChanges().subscribe(data => {
           data.forEach((element:any) => {
             let status = element.payload.doc.data();
-            if (status.username == email && status.role == "user"){
-              this.isUser = true;
+            if (status && status.role && status.username == email ){
+              this.role = status.role;
               this.isLoggedIn = true;
-              window.alert('You have successfully Logged in!');
-              console.log(result);        
-              this.router.navigate(['dashboard']);
+              if (this.role == 'user'){  
+                window.alert('You have successfully Logged in As a user!');       
+                this.router.navigate(['dashboard']);
+              }
+              else if(this.role == 'Admin') {
+                
+                window.alert('You have successfully Logged in As an Admin!');  
+                debugger
+                this.router.navigate(['admindashboard']);
+              }
             }
+          
           });
         })
         
@@ -68,5 +77,9 @@ export class AuthService {
   }
   isAuthenticated(){
     return this.isLoggedIn;
+  }
+  getAuthenticatedPrinciple(){
+    let principle = {'isLoggedIn':this.isLoggedIn, 'role':this.role};
+    return principle;
   }
 }
